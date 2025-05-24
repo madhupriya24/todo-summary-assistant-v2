@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+A full-stack web application that lets users manage their todos, generate a smart summary using an AI model (OpenAI), and automatically send that summary to a Slack channel via webhook integration.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🚀 Features
+✅ Add, edit, and delete todos
 
-## Available Scripts
+🤖 Summarize todos using OpenAI or Cohere API
 
-In the project directory, you can run:
+📤 Send summary to a Slack channel via webhook
 
-### `npm start`
+💬 Show Slack status (success/failure) in the UI
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+🛠️ Tech Stack
+Layer	Technology Used
+Frontend	React (Create React App)
+Backend	Node.js + Express
+AI API	OpenAI (or Cohere)
+Integration	Slack Webhook
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+🧰 Prerequisites
+Node.js version 16 or higher is recommended
 
-### `npm test`
+npm (comes with Node.js)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+⚙️ Setup and Run
+Backend
+Navigate to the backend folder:
+cd mytodoapp-backend
+Install dependencies:
+npm install
+Create a .env file with the required environment variables (see below).
 
-### `npm run build`
+Start the backend server:
+npm start
+Backend will run at: http://localhost:5000
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Frontend
+Navigate to the frontend folder:
+cd mytodoapp-frontend
+Install dependencies:
+npm install
+Start the frontend development server:
+npm start
+Frontend will run at: http://localhost:3000
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+🔐 Environment Variables
+Create a .env file inside the backend folder with the following variables:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+OPENAI_API_KEY=your_openai_api_key_here
+SLACK_WEBHOOK_URL=your_slack_webhook_url_here
+Replace the placeholders with your actual API keys.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+🔗 Slack Integration
+This project uses Slack Incoming Webhooks to post todo summaries to a Slack channel.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+How to configure Slack Webhook
+Create a Slack app at https://api.slack.com/apps
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Enable Incoming Webhooks for your app.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Add a new webhook URL and select the channel for posting summaries.
 
-## Learn More
+Copy the webhook URL and set it as SLACK_WEBHOOK_URL in your .env file.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Restart your backend server after updating the .env file.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+📁 Project Structure
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+todo-summary-assistant/
+├── mytodoapp-frontend/           
+│   ├── public/                   
+│   ├── src/                      
+│   │   ├── components/           
+│   │   ├── pages/                
+│   │   ├── App.jsx               
+│   │   └── index.js          
+│   ├── .env.example             
+│   └── package.json             
+│
+├── mytodoapp-backend/          
+│   ├── routes/                  
+│   ├── controllers/            
+│   ├── services/                
+│   ├── utils/                   
+│   ├── .env.example             
+│   ├── index.js                 
+│   └── package.json             
+│
+├── README.md                    
+├── .gitignore                   
+└── LICENSE                      
