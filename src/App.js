@@ -8,19 +8,23 @@ function App() {
   const [slackStatus, setSlackStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Add new todo
+  const [editIndex, setEditIndex] = useState(null);
+  const [editText, setEditText] = useState("");
+
   const addTodo = () => {
     if (newTodo.trim() === "") return;
     setTodos([...todos, { text: newTodo.trim(), done: false }]);
     setNewTodo("");
   };
 
-  // Delete todo
   const deleteTodo = (index) => {
     setTodos(todos.filter((_, i) => i !== index));
+    if (editIndex === index) {
+      setEditIndex(null);
+      setEditText("");
+    }
   };
 
-  // Toggle done status
   const toggleDone = (index) => {
     const updated = todos.map((todo, i) =>
       i === index ? { ...todo, done: !todo.done } : todo
@@ -28,7 +32,27 @@ function App() {
     setTodos(updated);
   };
 
-  // Summarize todos and send to Slack
+  const startEdit = (index) => {
+    setEditIndex(index);
+    setEditText(todos[index].text);
+  };
+
+  const saveEdit = (index) => {
+    if (editText.trim() === "") return;
+    const updated = todos.map((todo, i) =>
+      i === index ? { ...todo, text: editText.trim() } : todo
+    );
+    setTodos(updated);
+    setEditIndex(null);
+    setEditText("");
+  };
+
+  const cancelEdit = () => {
+    setEditIndex(null);
+    setEditText("");
+  };
+
+  // UPDATED handleSummarize function here
   const handleSummarize = async () => {
     if (todos.length === 0) {
       setSummary("Please add some todos first.");
@@ -50,7 +74,7 @@ function App() {
 
       if (response.ok) {
         setSummary(data.summary || "No summary returned");
-        setSlackStatus("✅ Summary sent to Slack successfully!");
+        setSlackStatus(data.slackStatus || "");
       } else {
         setSummary("Error fetching summary");
         setSlackStatus("❌ Failed to send summary to Slack.");
@@ -76,57 +100,76 @@ function App() {
       />
       <button onClick={addTodo}>Add</button>
 
-     <ul style={{ paddingLeft: 0, maxWidth: "500px" }}>
-  {todos.map((todo, idx) => (
-    <li
-      key={idx}
-      style={{
-        listStyle: "none",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px",
-        marginBottom: "8px",
-        border: "1px solid #ccc",
-        borderRadius: "6px",
-        backgroundColor: "#f9f9f9"
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-        <input
-          type="checkbox"
-          checked={todo.done}
-          onChange={() => toggleDone(idx)}
-          style={{ marginRight: "10px" }}
-        />
-        <span
-          style={{
-            textDecoration: todo.done ? "line-through" : "none",
-            wordBreak: "break-word"
-          }}
-        >
-          {todo.text}
-        </span>
-      </div>
-      <button
-        onClick={() => deleteTodo(idx)}
-        style={{
-          marginLeft: "10px",
-          padding: "5px 10px",
-          backgroundColor: "#ff4d4f",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer"
-        }}
-      >
-        Delete
-      </button>
-    </li>
-  ))}
-</ul>
-
-
+      <ul style={{ paddingLeft: 0, maxWidth: "500px" }}>
+        {todos.map((todo, idx) => (
+          <li
+            key={idx}
+            style={{
+              listStyle: "none",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px",
+              marginBottom: "8px",
+              border: "1px solid #ccc",
+              borderRadius: "6px",
+              backgroundColor: "#f9f9f9"
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+              <input
+                type="checkbox"
+                checked={todo.done}
+                onChange={() => toggleDone(idx)}
+                style={{ marginRight: "10px" }}
+              />
+              {editIndex === idx ? (
+                <>
+                  <input
+                    type="text"
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") saveEdit(idx);
+                      if (e.key === "Escape") cancelEdit();
+                    }}
+                    style={{ flex: 1 }}
+                    autoFocus
+                  />
+                  <button onClick={() => saveEdit(idx)} style={{ marginLeft: "8px" }}>Save</button>
+                  <button onClick={cancelEdit} style={{ marginLeft: "4px" }}>Cancel</button>
+                </>
+              ) : (
+                <span
+                  onDoubleClick={() => startEdit(idx)}
+                  style={{
+                    textDecoration: todo.done ? "line-through" : "none",
+                    wordBreak: "break-word",
+                    cursor: "pointer"
+                  }}
+                  title="Double click to edit"
+                >
+                  {todo.text}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => deleteTodo(idx)}
+              style={{
+                marginLeft: "10px",
+                padding: "5px 10px",
+                backgroundColor: "#ff4d4f",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
 
       <button onClick={handleSummarize} disabled={loading}>
         {loading ? "Summarizing..." : "Summarize Todos"}

@@ -51,3 +51,11 @@ li:hover {
   background-color: #ddd;
   text-decoration: line-through;
 }
+body {
+  background-image: url("C:\Users\Madhu Priya\OneDrive\Desktop\to.jpg");
+  background-size: cover; /* Make it cover the entire screen */
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh; /* full viewport height */
+  margin: 0;
+}
