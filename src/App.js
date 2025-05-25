@@ -77,12 +77,12 @@ function App() {
         setSlackStatus(data.slackStatus || "");
       } else {
         setSummary("Error fetching summary");
-        setSlackStatus("❌ Failed to send summary to Slack.");
+        setSlackStatus("Failed to send summary to Slack.");
       }
     } catch (error) {
       console.error("Summarization error:", error);
       setSummary("Error fetching summary");
-      setSlackStatus("❌ Network or server error.");
+      setSlackStatus(" Network or server error.");
     }
     setLoading(false);
   };
